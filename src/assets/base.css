@@ -8,4 +8,10 @@ html{
 }
 body{
     width: 100%;
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: #444;
+    background-color: #f3f3f3;
+    min-height: 100vh;
 }

@@ -1,9 +1,28 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import BaseInput from "./ui/BaseInput.vue";
+import axios from "axios";
 
 const user = ref("");
-const pin = ref("");
+const password = ref("");
+
+const login = async () => {
+  try {
+    const { data } = await axios.get(
+      "https://6a8757d470fbbd308f98f1ed.mockapi.io/Users",
+    );
+    console.log(user.value, password.value)
+    data.map((u) => {
+      console.log(u.password)
+      if (u.name === user.value && u.password === Number(password.value))
+  
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const logout = () => {};
 </script>
 
 <template>
@@ -12,8 +31,20 @@ const pin = ref("");
     <img src="/logo.png" alt="Bankist logo" class="logo" />
     <form class="login" @submit.prevent>
       <BaseInput v-model="user" placeholder="user" class="login__input" />
-      <BaseInput v-model="pin" placeholder="PIN" type="password" class="login__input" />
-      <button class="login__btn" type="submit" aria-label="Log in">&rarr;</button>
+      <BaseInput
+        v-model="password"
+        placeholder="PIN"
+        type="password"
+        class="login__input"
+      />
+      <button
+        @click="login"
+        class="login__btn"
+        type="submit"
+        aria-label="Log in"
+      >
+        &rarr;
+      </button>
     </form>
   </header>
 </template>

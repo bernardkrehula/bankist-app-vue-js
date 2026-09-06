@@ -11,12 +11,12 @@ const login = async () => {
     const { data } = await axios.get(
       "https://6a8757d470fbbd308f98f1ed.mockapi.io/Users",
     );
-    console.log(user.value, password.value)
+    /* console.log(user.value, password.value)
     data.map((u) => {
       console.log(u.password)
       if (u.name === user.value && u.password === Number(password.value))
   
-    });
+    }); */
   } catch (error) {
     console.log(error);
   }
@@ -76,10 +76,6 @@ const logout = () => {};
   gap: 0.4rem;
 }
 
-.login__input:first-child {
-  background-color: #f3f3f3;
-}
-
 .login__btn {
   border: none;
   background: none;
@@ -90,9 +86,4 @@ const logout = () => {};
   transition: all 0.3s;
 }
 
-.login__btn:hover,
-.login__btn:focus {
-  outline: none;
-  color: #777;
-}
 </style>

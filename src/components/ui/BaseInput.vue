@@ -30,7 +30,6 @@ const model = defineModel<string>({ default: "" });
 
 .input:focus {
   outline: none;
-  background-color: #f3f3f3;
 }
 
 .input::placeholder {

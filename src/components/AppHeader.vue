@@ -1,35 +1,45 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import BaseInput from "./ui/BaseInput.vue";
-import axios from "axios";
+import {
+  requestLogin,
+  LoginError,
+  type LoggedInAccount,
+} from "@/api/requestLogin.ts";
 
 const user = ref("");
 const password = ref("");
+const errorMessage = ref("");
+const isLoading = ref(false);
+const account = ref<LoggedInAccount | null>(null);
 
 const login = async () => {
+  errorMessage.value = "";
+  isLoading.value = true;
+
   try {
-    const { data } = await axios.get(
-      "https://6a8757d470fbbd308f98f1ed.mockapi.io/Users",
-    );
-    /* console.log(user.value, password.value)
-    data.map((u) => {
-      console.log(u.password)
-      if (u.name === user.value && u.password === Number(password.value))
-  
-    }); */
+    account.value = await requestLogin({
+      user: user.value,
+      password: password.value,
+    });
+    user.value = "";
+    password.value = "";
   } catch (error) {
-    console.log(error);
+    errorMessage.value =
+      error instanceof LoginError ? error.message : "Something went wrong.";
+  } finally {
+    isLoading.value = false;
   }
 };
-
-const logout = () => {};
 </script>
 
 <template>
   <header class="header">
-    <p class="welcome">Welcome back, Sadeesha</p>
+    <p class="welcome">
+      {{ account ? `Welcome back, ${account.name}` : "Log in to get started" }}
+    </p>
     <img src="/logo.png" alt="Bankist logo" class="logo" />
-    <form class="login" @submit.prevent>
+    <form class="login" @submit.prevent="login">
       <BaseInput v-model="user" placeholder="user" class="login__input" />
       <BaseInput
         v-model="password"
@@ -38,14 +48,15 @@ const logout = () => {};
         class="login__input"
       />
       <button
-        @click="login"
         class="login__btn"
         type="submit"
+        :disabled="isLoading"
         aria-label="Log in"
       >
         &rarr;
       </button>
     </form>
+    <p v-if="errorMessage" class="login__error">{{ errorMessage }}</p>
   </header>
 </template>
 
@@ -86,4 +97,16 @@ const logout = () => {};
   transition: all 0.3s;
 }
 
+.login__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.login__error {
+  position: absolute;
+  top: 7.5rem;
+  right: 2rem;
+  font-size: 1.3rem;
+  color: #f5465d;
+}
 </style>
